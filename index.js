@@ -1,3 +1,4 @@
+require('./tracing');
 const AWS = require('aws-sdk');
 const sqs = new AWS.SQS({ apiVersion: '2015-03-31' });
 
