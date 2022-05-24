@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "local": "node index.js"
+  },
   "dependencies": {
     "@grpc/grpc-js": "^1.6.7",
     "@opentelemetry/instrumentation-aws-sdk": "^0.6.0",
