@@ -1,6 +1,27 @@
 const AWS = require('aws-sdk');
 const sqs = new AWS.SQS({ apiVersion: '2015-03-31' });
 
+(() => {
+    const https = require('https');
+  
+    const originalHttpsRequestFn = https.request;
+  
+    https.request = (...args) => {
+      const outgoingReq = originalHttpsRequestFn(...args);
+      if (args[0]?.host === 'sqs.us-east-1.amazonaws.com' && args[0].method === 'POST') {
+        const outgoingReqOriginalEndFn = outgoingReq.end;
+  
+        outgoingReq.end = function (payload, ...rest) {
+          if (typeof payload === 'string') {
+            console.debug('HTTP BODY DEBUG LOG ------>', payload);
+          }
+          return outgoingReqOriginalEndFn.call(this, payload, ...rest);
+        };
+      }
+  
+      return outgoingReq;
+    };
+  })();
 
 const receiveMessageConfig = {
     QueueUrl: process.env.QUEUE_URL,
