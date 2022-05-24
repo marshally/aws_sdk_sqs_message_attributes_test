@@ -39,6 +39,7 @@ async function sqsConsumer() {
   const messages = resp.Messages || [];
   console.log(messages)
 
+  let received_message_ids;
   if (messages.length) {
     received_message_ids = messages.map(({ ReceiptHandle }, k) => ({
       Id: k.toString(),
