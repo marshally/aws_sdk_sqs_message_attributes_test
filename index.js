@@ -30,34 +30,38 @@ const receiveMessageConfig = {
     MaxNumberOfMessages: 1,
     MessageAttributeNames: ['All'],
     VisibilityTimeout: 20,
-    WaitTimeSeconds: 10,
+    WaitTimeSeconds: 1,
 };
 
 async function sqsConsumer() {
-  while (true) {
-    const resp = await sqs.receiveMessage(receiveMessageConfig).promise();
+  const resp = await sqs.receiveMessage(receiveMessageConfig).promise();
 
-    const messages = resp.Messages || [];
-    console.log(messages)
+  const messages = resp.Messages || [];
+  console.log(messages)
 
-    if (messages.length) {
-      received_message_ids = messages.map(({ ReceiptHandle }, k) => ({
-        Id: k.toString(),
-        ReceiptHandle,
-      }));
+  if (messages.length) {
+    received_message_ids = messages.map(({ ReceiptHandle }, k) => ({
+      Id: k.toString(),
+      ReceiptHandle,
+    }));
 
-      // do stuff
+    // do stuff
 
-      const deletionPromise = sqs
-            .deleteMessageBatch({
-              QueueUrl: receiveMessageConfig.QueueUrl,
-              Entries: received_message_ids,
-            })
-            .promise();
+    const deletionPromise = sqs
+          .deleteMessageBatch({
+            QueueUrl: receiveMessageConfig.QueueUrl,
+            Entries: received_message_ids,
+          })
+          .promise();
 
-      await deletionPromise;
-    }
+    await deletionPromise;
   }
 }
 
-sqsConsumer();
+async function main() {
+  await sqsConsumer();
+  await sqsConsumer();
+  await sqsConsumer();  
+}
+
+main();
