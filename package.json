@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@grpc/grpc-js": "^1.6.7",
     "@opentelemetry/auto-instrumentations-node": "^0.28.0",
     "@opentelemetry/sdk-node": "^0.28.0",
     "aws-sdk": "^2.1141.0",
